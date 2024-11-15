@@ -3,18 +3,23 @@ project:
   output-dir: docs
 
 website:
-  title: "raniaabdulhafiz.github.io"
+  title: "Rania Abdul Hafiz"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - mini_project1B.qmd
+      - interactive_maps_github.qmd
+      - mini_project2.qmd
 
 format:
   html:
-    theme: cosmo
+    theme: 
+      light: sandstone
+      dark: slate
     css: styles.css
     toc: true
+    page-layout: full
 
 editor: visual
 

@@ -1,11 +1,18 @@
 ---
-title: "raniaabdulhafiz.github.io"
+image: usa.JPG
+toc: false
+about: 
+  template: jolla
+  image-shape: round
+  image-width: 20em
+  links:
+    - text: LinkedIn
+      href: linkedin.com/in/rania-abdul-hafiz/
+    - text: GitHub
+      href: https://github.com/Raniaabdulhafiz
+    - text: Email
+      href: mailto:abdulh1@stolaf.edu
 ---
 
-This is a Quarto website.
+Hi there! My name is Rania Abdul Hafiz. I am a student at St. Olaf College majoring in Kinesiology and Statistics and Data Science concentration. I work as a Sports Medicine Assistant and I like to use my data science skills to explore various trends in the health field and specifically sports injuries. Poke around my website to learn more!
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```

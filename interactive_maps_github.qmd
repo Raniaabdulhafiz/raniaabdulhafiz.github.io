@@ -1,0 +1,130 @@
+---
+title: 'Mini Project 1B: Interactive Maps'
+output: html_document
+date: "2024-09-20"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#| message: false
+
+library(sf) #<1>
+states <- read_sf("https://rstudio.github.io/leaflet/json/us-states.geojson")  #<2>
+class(states) #<3>
+states
+```
+
+## R Markdown
+
+1. An Interactive Numeric Map: The Highest Violent Crime Rate Type in each State. 
+
+```{r}
+library(dplyr)
+library(leaflet)
+library(shiny)
+library(tidyverse)
+
+crime <- read.csv("https://corgis-edu.github.io/corgis/datasets/csv/state_crime/state_crime.csv")
+
+violent_crimes <- crime
+
+states <- states %>%
+   left_join(violent_crimes, 
+             by = c("name" = "State"))
+
+violent_crimes <- violent_crimes %>%
+  mutate(State = tolower(State))
+
+data_mapped <- violent_crimes %>%
+   left_join(states, 
+             by = c("State" = "name"))
+
+states_map <- map_data("state")
+
+
+# Summarize violent crimes by type
+violent_crimes <- crime %>%
+  group_by(State) %>% 
+  summarize(Data.Totals.Violent.Assault = sum(Data.Totals.Violent.Assault),
+            Data.Totals.Violent.Rape = sum(Data.Totals.Violent.Rape),
+            Data.Totals.Violent.Robbery = sum(Data.Totals.Violent.Robbery),
+            Data.Totals.Violent.Murder = sum(Data.Totals.Violent.Murder)) %>% 
+  select(State, 
+          Data.Totals.Violent.Assault, 
+          Data.Totals.Violent.Rape, 
+          Data.Totals.Violent.Robbery, 
+          Data.Totals.Violent.Murder) %>%
+   mutate(Highest_Crime = pmax(Data.Totals.Violent.Assault, 
+                               Data.Totals.Violent.Rape, 
+                               Data.Totals.Violent.Robbery,
+                               Data.Totals.Violent.Murder, na.rm = TRUE)) %>%
+   mutate(Highest_Crime_Type = case_when(
+     Highest_Crime == Data.Totals.Violent.Assault ~ "Assault",
+     Highest_Crime == Data.Totals.Violent.Rape ~ "Rape",
+     Highest_Crime == Data.Totals.Violent.Robbery ~ "Robbery",
+     Highest_Crime == Data.Totals.Violent.Murder ~ "Murder",
+     TRUE ~ NA_character_
+   )) %>%
+   select(State, 
+          Highest_Crime_Type)
+
+
+data_mapped <- violent_crimes %>%
+   left_join(states,
+             by = c("State" = "name"))
+ 
+states <- states %>%
+   left_join(violent_crimes, by = c("name" = "State"))
+
+
+# Color mapping for different crime types
+states <- states %>%
+   mutate(c = case_when(
+      Highest_Crime_Type == "Assault" ~ "darkred",
+      Highest_Crime_Type == "Rape" ~ "white",
+      Highest_Crime_Type == "Robbery" ~ "lightyellow",
+      Highest_Crime_Type == "Murder" ~ "white",
+      TRUE ~ "grey"
+))
+ 
+
+violent_crimes <- violent_crimes %>%
+   mutate(State = tolower(State))
+
+
+# leaflet  
+leaflet(states) %>%
+   setView(lng = -96, 
+           lat = 37.8, 
+           zoom = 4) %>% 
+   addTiles() %>%
+   addPolygons(
+     fillColor = states$c,
+     weight = 1,
+     opacity = 1,
+     color = "black",
+     dashArray = "3",
+     fillOpacity = 0.7,
+     highlight = highlightOptions(
+       weight = 2,
+       color = "white",
+       dashArray = "",
+       fillOpacity = 0.7,
+       bringToFront = TRUE
+     ),
+     label = paste(states$name, ":", states$Highest_Crime_Type),
+     labelOptions = labelOptions(
+       style = list("font-weight" = "normal", 
+                    padding = "3px 8px"),
+       textsize = "15px",
+       direction = "auto"))
+```
+
+
+Description:
+An interactive numeric map of the United States (excluding Alaska and Hawaii) which visualizes the most common violent crime by state, with different colors representing types of crimes: red for assault, blue for rape, green for robbery, purple for murder, and grey where data is unavailable. The map labels each state with the crime type it experiences most frequently. The aim is to visualize the geographical distribution of violent crimes across the country, which helps in identify regional patterns that might influence decisions on crime prevention and safety precautions. 

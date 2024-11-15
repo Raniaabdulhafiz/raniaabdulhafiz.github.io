@@ -1,0 +1,58 @@
+---
+title: "Mini Project 2:Data Scraping"
+output: html_document
+date: "2024-09-20"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| include: FALSE
+
+library(tidyverse)
+library(stringr)
+library(rvest)
+library(polite)
+library(sf)
+library(maps)
+library(viridis)
+library(leaflet)
+library(htmltools)
+library(dplyr)
+
+```
+
+```{r}
+# check that scraping is allowed (Step 0)
+robotstxt::paths_allowed("https://fbref.com/en/comps/1/schedule/World-Cup-Scores-and-Fixtures")
+
+# Step 1: read_html()
+scores <- read_html("https://fbref.com/en/comps/1/schedule/World-Cup-Scores-and-Fixtures")
+
+# step 2: html_nodes()
+tables <- 
+  html_nodes(scores, css = "table") 
+tables
+
+# 3: html_table()
+html_table(tables, header = TRUE, fill = TRUE)
+scores_data1 <- html_table(tables, header = TRUE, fill = TRUE)[[1]]  
+scores_data1
+```
+
+```{r}
+# Rename duplicate columns to make them unique
+colnames <- names(scores_data1) <- make.unique(names(scores_data1))
+
+# Clean data
+scores_data1 <- scores_data1[, 1:(ncol(scores_data1) - 2)] %>% 
+  select(-xG, -xG.1) %>% 
+  rename(week = Wk) %>% 
+  rename_with(~ str_to_lower(.), everything()) %>% 
+  slice(-c(17, 34, 51)) %>% 
+  mutate(away = str_remove(away, "^[A-Za-z]+ "),
+         home = str_remove(home, " [A-Za-z]+$"),
+         venue = str_remove(venue, " \\(Neutral Site\\)"))
+
+scores_data1
+```
