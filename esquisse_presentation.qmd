@@ -1,0 +1,124 @@
+---
+title: "Exploring the esquisse Package"
+author: "Rania Abdul Hafiz"
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    logo: images/quarto.png
+    css: styles.css
+    footer: <https://quarto.org>
+editor_options: 
+  chunk_output_type: console
+---
+
+## Introduction to esquisse
+
+-   The `esquisse` package helps in creating ggplot2 plots using a user-friendly interface.
+-   It creates data visualizations that are quick and easy for anyone seeking a quick interactive analysis whether they are:
+    -   new to R or
+    -   prefer a more visual approach to creating plots.
+
+## Example: Fruit Dataset
+
+```{r, echo = TRUE}
+# Create a simple data frame for fruits
+fruit_data <- data.frame(
+  fruit = c("apple", "banana", "strawberry", "mango", "avocado"),
+  price = c(1.2, 0.5, 2.5, 3.0, 1.5),  # Price per pound in USD
+  quantity = c(50, 100, 40, 20, 30),   # Quantity available
+  calories = c(52, 89, 50, 277, 73),   # Calories per 100g
+  vitamin_c = c(4.6, 8.7, 7.0, 0.0, 36.0)    # Vitamin C content in mg per 100g
+)
+
+fruit_data
+```
+
+## Example 1: Bar Chart of Fruit Prices
+
+![](images/Example%201A.png){fig-align="center" width="1000"}
+
+## Visualizing the Fruit Data set
+
+Using `esquisse`, we can create a bar chart to compare the prices of different fruits.
+
+```{r, echo=TRUE}
+#| eval: false
+library(esquisse)
+esquisser(data = fruit_data)
+```
+
+## Code given:
+
+```{r, echo=TRUE}
+#| eval: false
+
+library(ggplot2)
+
+ggplot(fruit_data) +
+ aes(x = fruit, y = price) +
+ geom_col(fill = "#112446") +
+ theme_minimal()
+```
+
+## Features of `esquisse`
+
+-   Drag and drop interface.
+
+-   Create plots by dragging variables onto axes.
+
+## Customization
+
+-   Easily customize colors, themes, and titles without writing a code.
+-   Filter data variables
+-   Create different ggplot2 charts.
+-   Export graphs as PNG or PowerPoint file.
+-   Export the code to create the same graph
+
+## We can play with the colors and add legend:
+
+![](images/Example%201B.png){fig-align="center" width="1000"}
+
+## Code given:
+
+```{r, echo=TRUE}
+#| eval: false
+
+ggplot(fruit_data) +
+ aes(x = fruit, y = price, fill = price) +
+ geom_col() +
+ scale_fill_gradient(low = "#35011B", 
+ high = "#EF7373") +
+ labs(x = "Fruit", y = "Price", title = "Fruit vs Price", fill = "Price") +
+ theme_linedraw()
+```
+
+## Example 2: Scatter Plot of Price vs. Calories
+
+We can create a scatter plot to examine the relationship between price and calories.
+
+![](images/Example%202.png){fig-align="center" width="1500"}
+
+## Code given:
+
+```{r, echo=TRUE}
+#| eval: false
+
+library(ggplot2)
+
+ggplot(fruit_data) +
+ aes(x = price, y = calories, fill = fruit) +
+ geom_point(size = 2.15, colour = "#112446") +
+ scale_fill_hue(direction = 1) +
+ labs(x = "Price", y = "Calories", title = "Price vs Calories", fill = "Fruit") +
+ theme_gray() +
+ theme(legend.text = element_text(size = 15L), legend.title = element_text(size = 15L))
+
+```
+
+## Conclusion
+
+-   `esquisse` simplifies the process of creating complex visualizations.
+-   Ideal for users who may not be familiar with coding but want to leverage the power of ggplot2.
