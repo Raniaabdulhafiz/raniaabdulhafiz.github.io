@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Mini Project 4: Text Analysis – Rania Abdul Hafiz</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet">
+<script src="site_libs/wordcloud2-0.0.1/wordcloud2-all.js"></script>
+<script src="site_libs/wordcloud2-0.0.1/hover.js"></script>
+<script src="site_libs/wordcloud2-binding-0.2.1/wordcloud2.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Rania Abdul Hafiz</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./mini_project1B.html"> 
+<span class="menu-text">Mini Project 1A: Static Maps</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./interactive_maps_github.html"> 
+<span class="menu-text">Mini Project 1B: Interactive Maps</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./mini_project2.html"> 
+<span class="menu-text">Mini Project 2:Data Scraping</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./mini_project4.html" aria-current="page"> 
+<span class="menu-text">Mini Project 4: Text Analysis</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#loading-all-packages-needed" id="toc-loading-all-packages-needed" class="nav-link" data-scroll-target="#loading-all-packages-needed">Loading all packages needed</a></li>
+  <li><a href="#loading-data" id="toc-loading-data" class="nav-link" data-scroll-target="#loading-data">Loading data</a></li>
+  <li><a href="#using-str_functions-and-regular-expressions-tidy-the-data" id="toc-using-str_functions-and-regular-expressions-tidy-the-data" class="nav-link" data-scroll-target="#using-str_functions-and-regular-expressions-tidy-the-data">Using str_functions and regular expressions, tidy the data</a></li>
+  <li><a href="#sentiment-analysis---bing-sentiment" id="toc-sentiment-analysis---bing-sentiment" class="nav-link" data-scroll-target="#sentiment-analysis---bing-sentiment">Sentiment analysis - bing sentiment</a></li>
+  <li><a href="#tf_idf" id="toc-tf_idf" class="nav-link" data-scroll-target="#tf_idf">tf_idf</a></li>
+  <li><a href="#wordcloud" id="toc-wordcloud" class="nav-link" data-scroll-target="#wordcloud">Wordcloud</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Mini Project 4: Text Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This mini project focuses on exploring the lyrics of Kendrick Lamar’s songs through various text analysis methods, including sentiment analysis, term frequency-inverse document frequency (TF-IDF), and word clouds.</p>
+</section>
+<section id="loading-all-packages-needed" class="level2">
+<h2 class="anchored" data-anchor-id="loading-all-packages-needed">Loading all packages needed</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(billboard)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud2)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sentimentr)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="loading-data" class="level2">
+<h2 class="anchored" data-anchor-id="loading-data">Loading data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>kendrick_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"~/raniaabdulhafiz.github.io/mini_project4/kendrick_data.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>curse_words <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"~/raniaabdulhafiz.github.io/mini_project4/curse_words.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="using-str_functions-and-regular-expressions-tidy-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="using-str_functions-and-regular-expressions-tidy-the-data">Using str_functions and regular expressions, tidy the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tidy_lyrics <span class="ot">&lt;-</span> kendrick_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, lyrics) <span class="sc">%&gt;%</span> <span class="co">#separate lyrics by word</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(curse_words) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> stop_words<span class="sc">$</span>word) <span class="sc">%&gt;%</span> <span class="co">#filter out stop words and create n </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(word) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>tidy_lyrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15,805 × 10
+# Groups:   word [6,268]
+   track_name album release_date duration_ms popularity speechiness danceability
+   &lt;chr&gt;      &lt;chr&gt; &lt;date&gt;             &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 2 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 3 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 4 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 5 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 6 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 7 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 8 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+ 9 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+10 Growing A… Over… 2010-09-14        220995         52       0.366        0.586
+# ℹ 15,795 more rows
+# ℹ 3 more variables: tempo &lt;dbl&gt;, word &lt;chr&gt;, n &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tidy_lyrics <span class="ot">&lt;-</span> tidy_lyrics <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">str_to_lower</span>(.))) <span class="sc">%&gt;%</span> <span class="co">#change all to lower case</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">"</span><span class="sc">\\</span><span class="st">d"</span>), <span class="co">#remove all words that contain numbers</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">"[^a-zA-Z0-9 ]"</span>), <span class="co">#remove all words that contain anything not a letter or number</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">str_length</span>(word) <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="co">#keep words longer than 3 letters </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>tidy_lyrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13,887 × 10
+# Groups:   word [5,649]
+   track_name album release_date duration_ms popularity speechiness danceability
+   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;       
+ 1 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 2 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 3 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 4 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 5 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 6 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 7 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 8 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+ 9 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+10 growing a… over… 2010-09-14   220995      52         0.366       0.586       
+# ℹ 13,877 more rows
+# ℹ 3 more variables: tempo &lt;chr&gt;, word &lt;chr&gt;, n &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="sentiment-analysis---bing-sentiment" class="level2">
+<h2 class="anchored" data-anchor-id="sentiment-analysis---bing-sentiment">Sentiment analysis - bing sentiment</h2>
+<p>By performing sentiment analysis using the bing lexicon, the bar plot showing the net sentiment of each album gives a glimpse of the emotional tone of Kendrick’s music. I measured the positive and negative sentiments, and calculated the net sentiment by subtracting the number of negative words from the positive ones. We can see a pattern in the emotional tone of Kendrick’s albums over time, which indicating shifts in mood, themes, or messages from one album to the next. Rappers tend to release something new each time that reflects their personal experiences, but we tend to see a domination of positive tone and use of words in most of his albums.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>bing_sentiment <span class="ot">&lt;-</span> tidy_lyrics <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">get_sentiments</span>(<span class="st">"bing"</span>), <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(album, sentiment) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sentiment, <span class="at">values_from =</span> n, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">net_sentiment =</span> positive <span class="sc">-</span> negative)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bing_sentiment, <span class="fu">aes</span>(<span class="at">x =</span> album, </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">y =</span> net_sentiment, </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fill =</span> album)) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Net Sentiment of Kendrick Lamar Albums"</span>, </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Album"</span>, </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Net Sentiment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mini_project4_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="tf_idf" class="level2">
+<h2 class="anchored" data-anchor-id="tf_idf">tf_idf</h2>
+<p>The TF-IDF plot identifies the most important and distinctive words in each album. Words with high TF-IDF values are unique to specific albums, revealing central concepts to each album’s lyrics. We can see that Kendrick’s focus shifts on particular subjects, whether political, social, or personal, across different stages of his career. This gives a deeper understanding of his artistic evolution and shifting in priorities. For instance, on his Diss Tracks, we can see that the word “audience” was used a lot, while in his album Untitled Unmastered, there was a mix of emotions “crying”, “mortal”, “hooray”. There is a shift in emotions based on the type of the album and the targeted audience.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tf_idf <span class="ot">&lt;-</span> tidy_lyrics <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(album, word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, album, n) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(tf_idf))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>tf_idf <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(album) <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(tf_idf, <span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder_within</span>(word, tf_idf, album), </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> tf_idf, <span class="at">fill =</span> album)) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>album, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reordered</span>() <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Words by TF-IDF in Kendrick Lamar Albums"</span>, </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"TF-IDF"</span>, </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Word"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mini_project4_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="wordcloud" class="level2">
+<h2 class="anchored" data-anchor-id="wordcloud">Wordcloud</h2>
+<p>The word cloud shows the most frequent words in Kendrick Lamar’s lyrics. Larger words appear more frequently, while smaller words are less common, the number of time a word is repeated is shown as well. This visual makes it easy to identify dominant themes in Kendrick’s lyrics. Words like “life,” “feel,” “free,” and “world” could appear large, indicating their frequent use in his lyrics, which could point to overarching themes in his music. The color and shape of the word cloud are added as a way of visually engaging the viewer.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tidy_lyrics <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wordcloud2</span>(<span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"random-light"</span>, <span class="at">backgroundColor =</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-e640da3473c722820483" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-e640da3473c722820483">{"x":{"word":["life","time","love","world","feel","live","bout","money","baby","black","wanna","yeah","gotta","head","real","call","told","watch","mind","city","family","heart","kendrick","eyes","inside","kill","street","dead","power","talk","game","girl","homies","mama","pray","soul","body","deep","home","hurt","lookin","pain","people","play","start","stop","twenty","front","lost","nothin","remember","streets","truth","wrong","feelings","hard","hear","past","song","tryna","hand","hate","heard","hope","music","night","somethin","walk","woman","compton","crazy","fast","homie","killed","livin","white","called","daddy","hold","listen","lord","rich","watchin","caught","found","hell","hood","house","king","momma","phone","ride","school","trust","block","blue","broke","change","damn","free","friends","left","matter","promise","rapper","sleep","stay","true","blood","days","faith","hands","hoes","hundred","line","meet","thinkin","times","women","blow","cousin","earth","energy","feet","fire","future","gettin","guess","jump","kids","leave","morning","mother","pick","playin","reason","recognize","straight","talkin","wait","beat","bring","business","close","death","door","dream","evil","father","hide","looked","mirror","pass","peace","record","respect","shot","speak","stuck","tired","type","water","wrote","alright","ball","catch","cool","crack","crash","dollar","fall","forever","gold","heaven","hopin","industry","lives","million","minute","mouth","party","push","question","stand","takin","taking","words","babies","blame","brother","burn","care","chain","check","control","couple","drop","famous","gang","girls","goin","hair","history","lies","living","makin","park","pull","religion","started","write","alive","bank","bein","bottle","boys","brain","break","callin","calling","children","club","cold","cover","culture","dark","dawg","dirty","fake","favorite","fight","fool","gonna","judge","lamar","lights","miss","move","rappers","ready","safe","shoot","smell","smoke","strong","thirty","uncle","walkin","america","attention","buildin","cameras","cars","church","compromise","corner","cross","decision","dollars","dreams","drive","feeling","forgive","friend","killer","lack","land","late","light","loud","martin","moment","murder","outta","paid","person","plan","police","public","read","roll","runnin","screaming","section","shame","sick","skin","smile","sound","stage","star","story","success","throw","understand","vibe","weed","window","woah","word","worth","actin","askin","bible","bill","bleed","blind","blunt","bought","building","comin","conflicted","count","distance","double","duck","dumb","favor","feelin","figure","finally","freedom","funny","ghetto","government","guns","heavy","honest","hoping","hour","influence","karma","learned","lied","lose","mention","mines","movin","neck","pride","proud","reaction","round","save","sell","share","shut","silence","sister","slide","store","stories","stress","style","swear","tears","touch","trippin","verse","victim","violence","visit","wind","angel","answer","answers","artist","backwards","bars","beast","bigger","born","broken","bullet","chains","child","color","coming","cost","county","credit","crime","daily","daughter","demons","deserve","diamonds","died","difference","dope","drink","dropped","drugs","enemy","fame","fear","finger","follow","food","forty","forward","frustrated","generation","grew","guilt","hang","hearts","human","jail","jesus","jordan","leavin","lift","losin","loved","loyalty","master","meant","mercedes","mistake","mistakes","neighborhood","option","paranoid","personal","picture","piece","pieces","pistol","poor","promised","promises","purpose","rain","raised","reality","resentment","rosecrans","running","scared","seat","sensitive","sinner","slave","slow","songs","spirit","spot","struggle","tellin","telling","thinking","thousand","tomorrow","tour","track","trip","voice","waitin","waiting","wake","walked","walking","wall","woke","writing","afraid","album","ambition","anonymous","bang","biggest","bird","blessed","blessing","blink","bottom","bounce","brown","build","bullets","bust","busy","california","candy","card","career","carry","cash","cell","changed","chasing","checked","company","confidence","continue","conversation","couch","crown","curse","deal","depression","drove","drown","drug","drunk","duckin","easy","enemies","evils","explain","fade","failed","fate","feed","fill","fine","finna","flag","flex","flip","floor","flow","forget","forgiveness","fresh","function","grade","grown","gunshot","happened","happening","hennessy","holla","humble","insecurities","intentions","jewelry","jumpin","keys","knees","laugh","lean","learn","level","lines","logic","loose","magic","mankind","mark","married","michael","misusing","month","moving","nerve","paint","panic","peel","perfect","pimp","pity","plane","planet","plans","played","pocket","poppin","pops","poverty","pulled","quarter","quick","radio","raise","reach","rest","reverse","sellin","send","seventeen","short","sign","sing","society","speed","split","spoke","stare","step","steps","stressin","studio","study","surely","survive","sweet","switch","system","talking","tape","taste","taught","tire","tonight","town","traffic","treat","universe","vain","view","wave","weak","wear","week","workin","worried","abusing","accustomed","active","alien","american","artists","ashamed","attract","barely","based","beautiful","beauty","belly","benefits","benjamin","benz","bodies","book","bottles","brand","breaking","breathe","bumpin","bunch","buried","cats","celebrate","charged","chase","chicken","chopper","chose","christ","christian","christmas","closed","closer","clothes","clout","cole","college","colors","comfortable","common","community","completely","complexion","condom","conscience","corners","crip","critical","critics","dance","daughters","dave","debt","decisions","destiny","devil","diss","doin","doubt","drinkin","drought","easily","eatin","edge","elementary","emotions","euphoria","excuse","exist","fair","fault","feds","fell","field","fifteen","fifty","flaws","flesh","flowers","forgot","funds","gain","gemini","ghost","girlfriend","givin","glad","glass","goddamn","gossip","grabbed","grams","grave","green","grind","ground","grow","hall","handle","happy","heal","hearin","heritage","hiii","hole","holy","hopped","hustlin","ignore","innocence","insensitive","inspired","intuition","involved","jacket","judgment","juice","jumped","kenny","kick","killers","killin","knock","knowin","kush","language","likes","limit","list","losing","loss","lovely","luck","lucy","lust","luther","lyin","lyrics","marijuana","market","matrix","message","middle","mile","mill","morale","morals","nappy","nazareth","neighbors","news","nights","nose","note","notice","offend","opinion","oprah","pack","panties","paper","parked","parties","passin","pastor","pedestal","perception","plays","pockets","pools","post","prayed","prayin","presence","president","pretty","price","product","profit","projects","prolly","property","protect","prove","pushing","racin","racist","rappin","realest","realized","relate","relevant","remind","repeat","resist","road","rock","rocks","rollin","saint","salary","saving","scam","score","scream","screamin","searching","sense","servin","shake","sherane","shooter","shower","sins","sittin","sixteen","skinned","sleepin","social","soda","speakin","special","standin","starin","stomach","suck","suffer","sunday","supposed","survival","swim","tank","team","thug","tone","trapped","trees","tripping","trouble","trunk","ugly","victims","vision","walls","waste","waves","wavin","wealthy","weekend","weeks","weird","west","wore","yesterday","accent","acres","action","acts","addiction","admit","advice","afford","african","agree","aimin","alcohol","alignment","allegiance","allergic","amen","anytime","appetite","assistance","atlanta","avenues","award","aware","babe","ballin","banging","basketball","beef","behavior","believed","belt","bend","berry","birth","bitter","bless","blocks","blowin","bone","boss","bread","bros","brought","built","bully","burned","butt","capital","cards","casualty","center","challenge","chance","channel","chest","chillin","clean","climb","clinton","closure","cloud","coast","cocaine","coffin","comfort","complicated","comprehend","compromised","confirmation","conscious","cope","copy","corporate","cotton","countin","court","cousins","coward","crackers","crew","criminals","critic","crooked","crossed","crowd","crying","curb","dancin","dash","dashboard","dealt","decent","dedicated","definition","demo","demon","deposit","designer","destruct","dial","diem","dirt","disrespect","distant","distracted","dogs","doors","dough","drake","drinking","dust","dying","eleven","embrace","emotional","empathy","empty","engine","entertain","envy","evident","exit","experience","extra","falling","false","favors","features","fiend","fightin","fighting","figured","filled","finish","fired","firm","flower","focused","followin","fore","forgiven","foundation","freeze","funk","gamblin","games","generations","glory","grab","half","handed","hangin","happen","harder","hardest","hatin","haunt","havin","headed","heat","held","henny","hips","holdin","homeboy","honor","hooray","hotel","hours","hungry","hustler","ignorance","imagine","independent","innocent","insane","institutionalized","integrity","ironic","jackson","jealous","jealousy","keepin","kickin","kitchen","knowing","kool","kunta","laid","lane","lead","leader","leak","legs","lend","letting","liar","lifetime","lips","listenin","loan","locked","lottery","mall","manager","marcus","mary","mask","means","mediocre","meditate","memes","memory","mentioned","metaphor","microwave","mike","millions","mission","mixed","model","moments","monkey","months","mood","moon","mornin","mortal","mothers","moved","mule","naked","nasty","nation","newborn","niece","nowadays","obama","offer","opportunity","ounce","pacify","paparazzi","paperwork","parade","parents","parking","passed","passion","passport","patience","peak","penitentiary","percent","petty","phrase","physical","picked","pictures","pill","pimping","pink","piru","pirus","plastic","platinum","playing","plead","plenty","poison","pole","pool","popping","porch","porsche","posed","potential","powder","practice","praise","prayers","press","pressure","private","project","proof","prophet","prosper","puff","pump","purple","queen","race","rang","range","raps","rare","reagan","realize","reapin","reasons","receipt","receipts","relatives","relax","relentless","relief","repeats","represent","resembled","reside","revenge","riding","ronald","rotation","runway","rush","sacrifice","salute","savior","schools","screen","selfish","selling","sentence","service","serving","settle","shine","ship","shirt","shooters","shootin","signs","sink","sippin","slap","slaves","sleeve","smart","snitch","sober","space","speakers","spend","spin","spiritual","spit","squad","stackin","stale","standing","stars","steppin","stick","stock","stores","stranger","strangers","stressing","stripes","stronger","struck","stuff","stunt","stupid","sucked","sucker","suicidal","suicide","summer","support","swallow","swore","talent","talked","tall","teachin","temple","temptation","tender","text","theory","threat","threats","tolerance","tongue","tossed","tough","toxic","trips","truthfully","turkey","twelve","twisted","tyrone","uncles","understood","valley","vanity","views","vividly","wack","wars","watching","wayne","weapon","wearin","weave","wheel","whitney","wisdom","witnesses","wonderin","worry","worst","wrapped","wreck","wrongs","yard","yellin","yelling","youth","abandoned","abomination","abused","accept","accident","accolades","accountant","accused","achievements","acting","actor","addict","advance","advantage","aesthetic","affiliation","afro","aight","allure","amazin","amazing","ambulance","ancestors","angels","anythin","apologize","appointment","appraised","approach","asian","assassin","assuming","atms","attempt","attitude","attracting","attraction","aubrey","audacity","audience","auntie","autopsy","average","awards","awkward","babysit","background","balance","baller","band","banks","bare","barge","barking","barriers","basic","basis","basket","beamin","bear","beats","beefin","begin","belligerent","belong","benzes","billion","birkin","birthday","bite","blacker","blast","bleedin","blessin","blessings","blew","bliss","blown","blur","boat","bolts","books","boom","borderline","boring","boyfriend","brace","bracking","brains","breakin","breaks","brick","bridge","bringing","bron","brothers","brrt","bucket","buddha","buick","buildings","bumper","bunk","burgers","burglars","burner","burning","bury","butterfly","button","caddy","cairo","calculated","camera","cancel","caption","capture","cared","casper","cautious","ceilin","celebrity","celly","centennial","central","certified","chad","chainz","chanel","charge","chasin","checkin","checks","cherry","chicago","chip","chirped","choice","choir","choose","chris","chubbs","circle","circlin","clericals","clip","clock","clocked","clouds","code","coin","coke","collect","collected","commissary","compared","competition","complain","complete","complex","concept","conclusion","conditions","condoms","confess","confession","confident","confusion","consciousness","consequence","considered","constantly","continuous","contradiction","controlled","convince","cooler","cops","core","coroner","correct","corvette","country","courts","covered","cracking","crashin","crave","creation","cried","cries","crips","cuba","curve","cute","daddies","daisies","damaged","dammit","damned","dangerous","date","deadbeat","dealing","dear","deceiving","december","dedication","defendin","defense","demetrius","demise","demolition","denial","deny","denzel","deprived","descendants","deserted","destroyed","destruction","deuce","diary","dice","difficult","digital","direction","disbelief","disc","discipline","discover","discrimination","disobedience","disperse","dolce","dolls","doomed","dormant","doubled","drank","dress","drill","drip","driver","drivin","drums","dues","dummy","dyin","earned","ease","easter","eating","education","eleventh","embarrassed","emotion","engineer","enlighten","enoch","entering","entertainin","entourage","episode","equal","equity","escape","estate","estelle","eternal","eternity","everyday","evidence","exact","exhausted","expire","extras","eyed","fabricated","fail","failure","fakes","fakin","fallen","families","fangs","fans","fashion","feature","fence","figures","finals","findin","finesse","finest","fingers","fishes","flat","flats","flight","flipping","floors","flying","focus","foolin","foolish","footage","forced","foreign","foreseeing","forgetting","fortunate","fought","fourteen","frame","frat","freak","freed","freestyle","freeway","french","fried","friendship","frightenin","froze","frozen","functions","gamble","gangster","garvey","gender","generational","genetic","genius","genocism","george","georgia","giving","goal","goals","godfather","gonzales","gorgeous","gram","grammy","grandma","granny","granted","greedy","grip","guarantee","guitar","guys","habits","habitual","haha","hail","halle","harsh","haters","hating","hatred","health","hearing","heartbeat","hearted","heavens","helping","helps","herb","hidin","highlight","hill","holding","homes","homework","hoppin","hopping","hormones","horrible","housing","huddle","huey","humanity","humbly","hundreds","hustle","hypocrites","identity","idols","illuminati","image","imagination","immortalized","imperfections","impress","inch","indigenous","inevitable","inferior","infinity","inhale","inherit","instrumental","intelligent","interviews","irrelevant","irrepetible","island","itch","james","jammin","jean","jewels","jigga","joey","johnny","joke","jokes","jordans","judged","jumping","june","justice","justify","kanye","keem","keisha","kelly","kicking","kicks","kiddin","killing","killings","kindness","kissin","knee","knife","kodak","kung","label","lacked","lake","lame","landslide","laughin","laughing","laws","lawyer","laying","leaders","leaves","legend","lesson","letter","leverage","license","lick","lifeline","lifestyle","lightning","liquor","lobby","location","louder","lovin","loving","loyal","lucky","lueders","lunch","madness","magnified","main","major","makeup","malcolm","male","manipulator","mannerisms","mansion","marble","margin","marks","marley","masculine","massacre","masses","mastered","math","meaning","mecca","mechanism","meditation","meds","melody","memories","mental","metaphors","microphone","mighty","mine","minor","minutes","mislead","mobbin","mockery","models","modest","moms","monogamy","monopoly","monster","morality","morn","mortified","movie","multiple","murderers","murderous","nail","named","names","nanny","nate","natural","nature","neighbor","nemesis","nephew","nerves","nervous","newton","nike","noodles","noose","notes","noticed","numb","nuns","nuts","occur","ocean","odds","offending","offense","opinions","opportunities","options","overcome","overlooked","pager","pair","pardon","passenger","patch","patient","peacemaker","pedigree","penetrate","percentage","perks","permanent","perry","persevere","perspective","pervert","pharrell","piano","pills","pipe","pipes","piss","pitbull","pizza","planets","plates","plug","poems","poke","policeman","politics","popular","posing","position","positive","pound","pour","powers","prada","preach","preachers","precious","predator","presidents","pretend","pretendin","prisoner","proceed","professional","prophets","proposal","protection","protocol","pryor","psst","psychology","punch","punk","pupils","pure","pushin","qualities","quickly","quit","racism","raid","rains","raising","random","raped","rapping","rarely","rational","react","realer","realness","reaper","receive","recipe","reciprocation","recording","recover","redemption","reekin","reflection","registration","regressions","regret","regrets","relationship","relative","relay","religions","remembered","remote","rent","repent","repetition","replied","reporting","reputation","resent","residence","restin","resume","retaliation","return","reveal","rewind","rhyme","rhymes","rhymin","rhythm","richard","riches","ridin","righteous","rights","ring","riot","rise","risk","robert","rollie","rolling","roses","routine","rover","royalty","rule","ruler","rules","santa","satisfy","sauce","savin","sayin","scar","scars","scenes","schemes","scholars","scholarship","scratch","scratchin","scroll","searchin","secret","secrets","security","seein","sendin","separate","sergeant","serve","seventy","shades","shadows","shaking","shape","sharing","shark","sharks","shatter","sheets","sheriff","sherm","shift","shock","shoes","shoo","shook","shooting","shopping","shots","shoulda","showin","sight","signed","siht","simplest","single","sinking","sitting","situations","sixes","sixty","size","skates","skating","skies","slid","slip","smack","smokers","smokin","smoking","snakes","sneak","snitched","snoop","sold","sore","sorrow","sort","sounded","sounds","sour","spare","sped","spent","spill","spinal","spinnin","spinning","spoiled","sponsor","spots","squeal","stack","stages","stamps","stares","staring","stash","station","stayed","stayin","stays","steady","steak","steal","steam","stepper","stereotype","stink","stockton","stole","stone","stood","stranded","strap","stray","streams","strength","stretch","strip","strobe","student","studied","successful","suckin","sugarcoat","suggest","suin","suit","suitable","surgery","surprise","surprised","swap","swerve","swimming","sword","sync","syrup","takes","target","tatted","tattoos","taxes","taxin","taylor","teach","teachers","teenager","teleport","temperature","themself","theories","thighs","thirst","thirsty","threes","thrown","thunder","tidal","ties","tight","timed","timid","tithes","toilet","topic","tore","total","tower","toxins","train","trained","trains","transformation","trauma","traveled","tree","trends","tropez","trumpet","tryin","tuoba","turmoil","tween","unconditional","unify","universal","unloyal","unsure","usin","vacant","valleys","vent","ventin","verses","vice","vices","victory","villain","violent","visa","vital","vogues","voicemail","vote","vroom","vulnerable","wallet","warm","watched","weakness","weekends","weep","weighin","weinstein","welfare","whispering","whistling","wicked","wide","wife","wild","willie","willin","wimbledon","wings","winners","winnin","wins","wires","wishin","wishing","witness","womb","workers","worries","worse","woulda","wrist","writin","yawk","yeht","youngin","zombies","zulu","abandonment","abortion","absentness","abundance","abusers","abusive","abyss","academy","acapella","acceptable","accepted","accessories","acclaim","accomplish","accomplished","accomplishing","accomplishment","accomplishments","accounting","accumulated","achieve","acid","acknowledged","acknowledging","acquire","acquired","activist","activists","actuality","adapt","adaptation","addicted","addictions","address","addressed","adhd","adina","admitted","adolescent","adonis","adrenaline","adults","advanced","advertisement","advised","advisor","advocate","affairs","affect","affected","affection","affirmative","afflalo","africa","afterlife","agenda","agendas","aggravation","agony","ahahah","ahahaha","ahead","aimed","aiming","alameda","alarmed","alchemist","alcoholic","alibi","alicia","alienate","allah","alleviate","alleys","alleyway","alleyways","allowance","allowances","alls","alondra","aloof","amaze","amberlamps","ambiguous","ambitious","amendment","amends","americans","amistad","amityville","amnesia","amphetamine","amplified","amrak","analog","analogy","analysing","analysts","analyze","anatomy","ancestor","ancient","andre","anger","angle","angry","animosity","ankles","annie","annihilate","anoint","anointed","antennas","anthem","anthony","anti","antibiotic","antic","anticipation","antidote","antisocial","antsy","anxiety","apache","apartheid","apartment","apartments","aphrodite","apologizin","apology","appalled","apparently","appealing","appeals","appetizing","applause","approval","approve","aquariums","arabians","aretha","argentina","argue","arguin","arguing","armies","arms","army","arrive","arrogance","arron","arsenal","artistses","aryan","ashanti","ashy","asians","asleep","asparagus","asphalt","asses","asshole","assist","association","assume","assumin","assumptions","assured","aston","atari","atheist","atheists","attire","attog","attractive","auction","audi","audible","aura","authenticity","automatic","avenue","avoiding","awake","awakened","awoke","axles","ayahuasca","babblin","babygirl","bach","backbone","backin","backpack","backpedaling","backseat","backstabbers","backstage","backstroke","backwood","backyard","bacteria","bada","badder","badges","bags","baka","baker","bakin","balcony","ballers","balling","ballistic","ballot","bamboos","banana","bandana","bangin","banking","baow","baptized","barack","barbecue","barbed","barbie","barefoot","bargains","bark","barrel","barricade","barricaded","barrio","base","basement","bash","bask","bass","bastard","bastards","batch","bathroom","baton","bats","batteries","battery","battin","battle","battles","battlin","battling","bauer","beach","beads","beady","beam","beamer","beamers","bean","beans","beard","beatin","beating","beatz","bedroom","beep","begged","beggin","beginning","begins","belief","believable","believer","believing","benefit","benjamins","bent","bentleys","bernie","biatch","bick","bike","billin","billy","binge","binocular","bipolar","birds","birthing","biscuits","bish","bitin","biting","bittersweet","bitty","bizarre","blackberry","blacked","bladder","blade","blam","blamin","blammy","blase","blases","blasphemy","bled","bleeding","blick","blinded","blindfold","blindin","blinkin","blocking","blog","blonde","bloods","bloodshed","bloomed","blowed","blower","blowtorch","blueprint","blues","bluff","blunts","board","boards","boats","bobby","bodied","bolt","bomb","bombs","bompton","bond","bones","boog","boogeyman","boogie","booked","boost","boosters","boosting","boot","booted","booth","booties","bopping","borders","borrow","bosses","bossing","bots","bougie","boulevard","bounced","bouquet","boxers","brackin","brag","braggin","braids","brainstorm","brake","brakes","brats","bravado","brave","brazilians","brazy","breaker","breakout","breath","breathing","bred","brewing","bridges","briefcase","briefs","bright","brighten","brighter","brimstone","bringin","brink","broads","brock","bronson","brooklyn","broom","brownie","brrrt","bruce","bruh","bruised","brunch","brung","brush","brushed","brutality","bubble","bubblin","bubbly","buck","buckle","buckles","bucks","buggin","buku","bull","bulletproof","bullies","bulls","bump","bumped","bumping","bungalow","burden","burdens","burger","burgundy","burners","burns","burst","bursting","buryin","buses","busters","butter","buttons","buyin","buzzin","cables","cabo","cachet","cactus","cadence","cadillac","cake","calamities","calculate","calculus","calendars","callout","calls","calm","camaraderie","camby","camel","camino","camouflaged","campin","camry","canadian","canals","candyman","cannibalism","cannonballs","cape","capitalism","capitalists","capri","captain","captive","captivity","caravan","carcass","cardio","careers","carl","carlos","carnivals","carpe","carpenter","carpet","carried","carries","cartwheel","cartwheels","carved","casino","casket","cast","castle","casually","catastrophe","catching","caterin","caterpillar","cathedral","catholic","caused","caution","cease","ceiling","celery","celibate","centers","cetera","chairs","chakras","challenged","champagne","chances","chaotic","chapter","character","charges","charlie","charlotte","chart","charts","chatter","cheap","cheat","cheated","cheatin","cheddar","cheek","cheesin","chemicals","cherish","chevy","chico","chiefers","chikabooya","childish","chill","chilling","chin","chipped","chiraq","chirping","chocolate","choices","choirs","choke","choker","chop","chopping","chord","chosen","christians","christina","ciara","circadian","circuit","circus","ciroc","citizen","claim","claimin","clarified","claritin","clarity","class","classes","classic","claus","cleaned","cleanest","clever","climate","climax","clingin","clips","clique","cliqued","clockin","clocking","clone","closest","clowns","clutch","coach","coal","cobain","cock","cocoa","coconut","cocoon","codefendant","cognac","coherent","coincidence","coincidental","coldchain","collar","collard","colleague","collection","collective","colleges","collision","colonizer","colored","columbine","combination","combined","comedian","comedic","comedy","commas","comments","commit","comp","companies","compares","comparisons","compassionates","compatible","compensation","compete","complacent","complained","completed","compliment","complimenting","comptown","compulsive","computer","conan","conans","conceal","conceited","conceived","concentrating","conception","concepts","conceptualize","concern","concrete","conditioner","conditioning","confidant","confined","confinement","conform","confrontational","confuse","congratulations","congress","connected","connection","connivin","conquer","consecutive","consequences","conservative","considerin","console","consolidate","conspiracies","conspiracy","constant","consume","consuming","contagious","contemplate","contemplatin","context","continued","continuously","contraband","contract","contributin","controlling","controversy","convention","conversate","convertible","convey","conviction","convinced","convincin","convincing","cooked","cooking","coordinated","copacetic","copenhagen","copin","coppin","cordial","corn","cornrow","coroners","corpse","correctionals","correspond","corvettes","cottonmouth","cough","coughing","counselin","counter","counterfeits","coupe","coupes","couples","courage","covers","covid","cracked","cranny","cravings","crawford","crawl","crawled","cray","cream","creasing","creative","creativity","creator","creators","cred","credentials","credibility","creek","creeping","crib","criminal","cringeworthy","crippin","crispy","crodie","crooks","crop","crucified","crucifix","crumbling","crumbs","crunchy","crush","cryin","crystal","cuban","cuddle","cudi","cuff","cuffin","cuffs","cummin","cure","curious","curl","curled","curly","currents","curriculums","curry","cursed","cursin","curtis","curves","curvin","customer","customs","cuticles","cuts","cutthroat","cutthroats","cycle","cycles","cyphers","daft","dale","damage","damian","dancefloor","danger","danny","dante","dare","darius","darkness","darlin","dashboards","dashed","dated","dating","david","davidson","dawgs","dawn","dealers","dealin","dearly","debate","decapitated","deceased","deceitful","deceive","decide","deck","decline","declined","decoys","dedicate","deebo","deelb","deer","defeat","defeated","defects","defending","defenses","definite","defuse","degenerate","degnahc","degrade","degrading","degree","degrees","dehumanized","deliver","delivered","dellik","demand","demanded","demarcus","dementia","demigod","denim","dennis","dependable","dependent","dependents","depending","derive","describe","describing","description","desensitized","desert","deserves","desire","desires","desist","desperate","desperately","despise","destroy","destroyin","details","detective","determination","determined","detour","detoxed","detrimental","detroit","deuteronomy","devastated","devastation","develop","developed","devilish","devils","devious","devoted","diabetes","diagnosed","dialect","diamond","diddy","dido","dies","digest","digging","digits","digress","dikes","diligent","dime","dimension","dior","dire","direct","disappear","disappeared","disapproved","disbeliefs","discharge","disciple","discouraged","discredit","discreet","discrete","discretion","discriminating","discuss","discussion","disease","disguise","disgusted","disgusting","dish","dishes","disintegrate","dismantle","disorder","disposition","disregardin","disrespectin","dissect","disses","dissin","distasteful","distinctive","distorted","distortion","distraction","distraught","distributed","district","ditching","ditsy","dive","diverse","diversity","divided","divine","division","divorce","dizzle","django","dluoc","dluow","doctor","doctorate","dodge","dodged","dodgin","dodging","doggie","doggy","doja","doll","dolo","dolphin","dome","dominance","dominate","dominguez","dominoes","donald","donnie","doobie","doobies","doog","dookie","doot","doubted","doughboy","downin","dozen","drac","dracula","drag","dragged","draggin","dragons","drama","drapes","dread","dreamer","drench","dresser","dressers","dresses","dried","drinks","dripping","driven","droppin","dropping","drowned","drowsy","drum","duality","ducking","duckworth","ducky","dudes","dukes","dumbo","dummies","dumping","dungeons","duns","dusted","dusting","dwele","dwell","dwellings","dyke","dynamics","dyno","dysfunctional","eagle","earl","earliest","earnhardt","ears","earthquakes","easier","ecnedicnioc","ecnis","economics","ecstatic","eddie","edisn","edisni","efil","egotistic","eiffel","eighteen","eighty","eiht","einstein","ekam","ekat","ekil","elaborate","elbow","elbows","elders","election","electrify","element","elevens","elggurts","elih","elixir","elohim","eloping","emancipation","emas","embassy","embody","emcees","emerge","emergency","eminem","emit","emits","emmy","emoji","empathize","emperor","employees","employment","empowered","enclave","endeavors","endorphins","endorsement","endorsements","enemigo","engaged","engines","english","eniaco","enots","ensurin","entertainers","enthused","enticin","entitlement","environment","equally","erac","erase","erehw","erica","erom","escaped","escort","esreve","esruc","esteem","estranged","esuace","etalucammi","ether","ethiopia","ethnicity","eulogies","european","eurt","eventually","everest","everythin","evian","evicted","evidently","evolve","ewing","exac","examine","examples","excel","excellence","excellent","exclamation","exec","executed","executive","exercise","exhausts","exhibit","exhibition","exodus","expand","expect","expected","expecting","experiment","expertise","expired","explanation","explosives","exquisite","extensions","extort","extortion","extraterrestrial","extrovert","eyebrows","eyein","eyeliner","fabric","fabricate","fabricatin","facade","facetious","facial","factor","factory","faded","fadin","fails","faint","fairytale","faithful","fallin","falsed","fantasies","fantasize","fantasy","farthest","faster","fastest","fastin","fasting","fatal","fatalities","fatality","fathers","fathom","faults","fauntleroy","favorites","feared","fearful","fears","feasible","february","federal","feedback","feeding","feels","feline","fellowship","felonious","felony","feminine","feminist","ferragami","fetch","fetish","feudin","feuds","fever","fiasco","fifteenth","fighter","fighters","figment","files","film","filter","final","finances","financially","fingerprints","finished","firearms","fireworks","firstborn","fisherman","fitted","flame","flames","flash","flashiness","flashy","flatterin","flattery","flavor","flawed","flee","flick","flicks","flies","flintstone","flipped","flipper","flippin","float","floating","floats","flock","flocks","flood","flooded","flop","flourish","flourished","flows","fluid","fluoride","foamin","fold","folded","foldin","fonk","foot","football","footballs","forbid","forbidden","force","forces","forcing","forecastin","foreman","forensics","forging","forgotten","fornicate","foster","fraction","fragile","fragrance","frank","frankenstein","frantic","fraudulent","freakin","freaky","fred","freight","frequent","freshener","friedman","friendly","friendz","frontin","fruit","frustration","fubu","fugazi","fulfilled","fulfilling","fumbled","fumblin","fund","funded","funkers","fussin","futu","gagging","gained","gaining","gambino","gangbanger","gangbangin","gangs","gangsta","gangsters","gantic","garage","garden","gardena","garnish","gaslightin","gate","gates","gathered","gatorade","gators","gauge","gays","gazing","gears","geeked","geez","gene","generator","generous","genre","gentlemen","geraldo","germans","germophobic","ghostbusters","ghostwriter","ghostwriters","gift","gifted","gimmick","gimmicks","girlfriends","glimpse","glitching","glock","glorified","glorify","glued","gluttonous","gnidrocer","gnihtyrev","goat","goats","goddammit","goddess","golden","golly","goodbye","gooding","goofy","goose","gorillas","gossiping","gotti","governin","governor","grabbin","grace","graces","grad","graders","grades","gradient","graduate","graduated","grahams","grandmama","grandmas","grandpa","grass","gratification","gratitude","gray","greece","greed","greens","greet","grey","grid","grief","grievance","grieve","grieves","grillin","grimy","grindin","grippin","groove","groovy","gross","grounded","groupies","growing","grows","grudges","gruesome","guard","guardin","guidance","guide","guilty","gullible","gulping","gunfight","gunman","gunna","gushy","gymnastics","habit","hahaha","hahahaha","haircut","hairdresser","hairs","haitian","halfway","hallelujah","halo","hammer","handouts","handshakes","handsome","hanging","hangs","happenin","happier","happiness","harassin","harley","harm","harrassin","harvest","harvestses","harvey","hassle","hater","hates","haul","hauntin","haunting","headhunting","heading","headlight","headlights","headline","heads","headshot","healin","heals","hearings","hearse","heartbreak","heartbroken","heels","heightened","helix","hellcat","helped","hereditary","hero","heroes","hetero","hiding","hieroglyphs","highlights","highs","highway","hilfiger","hindsight","hippy","hire","hired","hiring","hispanic","hissing","hitmaker","hobby","hockey","holler","hollerin","hollow","hollywood","homeboys","homegirl","homegirls","homeless","hometown","homi","homicidal","homicide","honda","honestly","honesty","honey","honking","honors","hoodies","hoodrat","hoodrats","hoolboy","hooligans","hoops","hoopty","hooters","hoover","hopes","horn","horny","horoscope","horseman","hospital","hostage","hotboxin","hotter","hottest","howard","howl","htiw","htob","htra","hubble","hubcaps","hudson","huge","huggin","hugs","humbleness","humblin","hummin","humor","hump","humpin","hund","hunger","hunnid","huntin","hurdle","hurl","hurry","hurts","hustling","hydrate","hydraulics","hydro","hykeem","hypersexualizes","hypnotize","hypnotized","hypocrite","hypocritist","hypothesis","hysterical","ibiza","icans","ideas","identified","idle","idolize","ignite","ignorin","illegal","illuminated","illusion","images","imaginary","imaginin","imitate","imitation","immaculate","immigrants","immune","impaired","impalas","impatience","imperative","import","imposin","impossible","impressed","inches","incident","including","income","increasing","indecisive","independence","indian","indicted","individuals","indo","indubitably","indulging","infamous","infatuated","infomercials","inheritin","insanity","insecure","inspiration","inspire","instagram","instance","instincts","institutionalizes","instrumentation","insufficient","intelligence","intended","interchanged","interference","interior","internal","international","internet","interrogated","interrogatin","intersection","intervention","intolerant","intoxicated","introduced","introverted","invasion","invented","invest","invested","investigate","investments","invited","involve","irony","irresponsible","isleys","israelite","issue","issues","iver","jabroni","jack","jacked","jackie","jackpot","jaguar","janky","jason","jayceon","jeans","jeezy","jehovah","jellyfish","jenner","jerkin","jesse","jets","jigaboos","jive","jobs","jocking","joel","jogging","john","johnson","joined","jokin","joking","jolie","jonah","joseph","judas","judges","judgin","judging","juggin","jumbotron","jungle","junior","junkies","justification","juug","kama","kane","kash","katt","katzkins","kazaam","keeping","kendall","kenobi","kentucky","khaki","khalifa","kickback","kicked","kickstand","killa","kilo","kinda","kings","kinks","kiss","kisses","kits","knockin","knots","knuckle","kobe","krit","kurt","kweli","kyrie","labels","lace","laced","laces","lackin","lactose","ladies","laduma","lady","lambo","lamont","lamy","landed","landin","landlord","landmines","lapd","laren","laser","latency","laters","laundering","lauryn","lawn","lawyers","layered","layers","leadership","leaks","leanin","leap","learnin","leash","leather","leaving","leery","leftovers","legacy","legal","leisure","lenses","lessen","lessons","letters","levels","levitate","levitatin","lexus","liberal","licks","liftin","lighter","lighters","likin","limited","limo","linen","lingo","link","lions","lipped","lipstick","listened","listeners","literate","lived","liver","llet","lluf","load","loaded","loadin","local","locations","lock","lockdown","logical","lokin","lone","loneliness","lonely","loner","longevity","loom","loopholes","loosely","loosen","lootin","lords","loser","losers","losses","lots","lotta","lotto","loudest","louis","louise","louvre","lover","loves","lowest","lows","luau","lucalis","luke","lullabies","lump","lunatic","lungs","luos","lupe","lurkin","lurking","lustful","lusting","luxury","lying","lynch","lyric","lyrical","lyrically","machine","mack","madden","madonna","mafia","magazine","magazines","magnum","mailman","maintaining","maintenance","majid","malibu","maliciously","mamas","mammy","managed","management","managing","mandela","mando","maney","manhood","manifest","manifested","manipulate","manipulated","manipulation","manipulative","mans","mansions","manson","marcellus","marching","marilyn","marina","markets","marriages","marry","mars","martial","martian","maserati","masks","masseuse","masson","mastermind","matador","match","matching","matranga","matters","maturity","mauled","maximum","mayday","mayor","mazdas","meal","measure","measured","meat","mechanics","mechanisms","medal","mediator","medic","medicine","meditating","medium","meetings","meets","meht","melly","melodies","melrose","membership","menaces","menacing","menial","mensa","mentality","mentally","mentor","merlot","messages","messagin","messenger","messiah","messin","metamorphic","metaphysically","meteor","meter","metro","mexicans","mhmm","miami","michigan","midi","midnight","midst","miles","milian","milk","millennium","milli","millionaire","millionaires","milly","mimicking","minaj","mindful","minimal","minimized","miniskirt","ministers","minivan","minivans","minnie","miracles","mirage","mirrors","mischievous","miscommunication","miserable","misogynist","misogyny","missed","missin","missionary","mist","mistaken","mistakenly","mistress","misunderstood","mixtape","mixtapes","moaning","mobile","mocking","mode","modelz","moderate","modnar","mogul","mold","molested","molotov","monday","moneybags","moniker","monte","monthly","moonlight","moons","moonshine","moonwalk","moosa","morf","morgan","morph","morpheus","mortgage","mortis","moses","mosh","moshpit","motel","motion","motive","motives","motorola","mournin","mourning","moves","movies","mowed","muhammad","muhfu","multi","mumbling","murderer","murk","muscle","muse","musical","mustang","mustard","muted","mutombo","mystique","nair","naive","narcissist","narcissistic","narcotics","narratives","nasa","navel","navy","ndingene","ndiseza","neal","nearest","needle","negative","neglect","neglectful","negotiate","negus","nekcihc","nelson","neon","nerd","nerdy","neutral","neutralized","newfound","nextel","niaga","nice","nickel","nickerson","nicki","nidnimer","nightmares","nikki","nines","ninety","nintendo","nipaer","nirvana","nissan","nitser","nivres","noble","noise","noisiced","noitnetta","nonsense","nook","nope","north","northside","nosetalgia","noticing","nouns","nrub","numbered","nurtures","nutrition","nuvo","nworht","nympho","oakland","oath","obituary","object","objectified","obnoxious","obstacle","obtain","obvious","odor","odyssey","offended","offenders","offensive","office","offices","offsprings","ohio","oldies","onion","online","ooooh","oops","opps","optics","orange","orbit","orchestra","organic","orleans","ornery","orphan","orphanage","osama","osteen","outcome","outdated","outdo","outdone","outer","outgrown","outlandish","outlook","outrap","outrun","overcame","overcoming","overheat","overnight","oversea","overzealous","owes","owned","owner","oxycontin","ozempic","pacin","pacino","packed","packin","pageant","paged","pained","painkillers","painless","painted","paintin","pajamas","pajamis","pakistan","palisade","palisades","palmer","palms","pancakes","panhandlin","panthers","pantry","pants","paradise","parallel","paralyzed","paralyzin","paramedics","paramount","parasite","parasites","parks","parmesan","parody","parrot","participatin","partition","partner","passengers","passing","passionate","password","patek","path","pathetic","patiently","patrick","patron","pattern","paul","pause","paved","payin","paying","payments","paystub","peacemaking","peach","pearly","peasant","pedaler","peddlin","pedophiles","peek","peekin","peeled","peelin","peep","peers","pendleton","penetratin","pennies","penny","pension","peons","perceive","percents","percs","perfected","perform","performance","performances","performing","perfume","periodically","perjury","perky","perseverance","persevered","persistence","personalities","personality","personas","persuade","persuasive","pessimist","pessimists","pfizer","phantom","pharcyde","phil","philosophies","philosophin","photo","photoshop","photoshoppin","physically","pickin","picking","piecin","pierced","pillows","pilot","pimpin","pinch","pinchin","pins","pirates","pirellis","pissed","pistons","pitch","pitiful","pivotal","pivotin","plaid","planes","planned","planning","plant","planted","plants","plaque","plasma","plate","platform","plaza","pleaded","pleased","pleasure","pled","pledge","plot","plum","plummet","poem","poetic","poker","poking","poli","policies","polished","politic","politically","politician","politicians","pollution","polo","pondering","ponders","poorer","popeyes","popped","popper","porcelain","pornos","pornstar","portion","portions","portrayed","posers","positives","possess","possessions","postal","posted","postered","posture","potion","poupon","pouring","powerful","practically","practiced","praises","prayer","preached","preacher","preacherman","preaching","precedent","predators","predicaments","predict","predictable","prejudiced","preliminary","premiere","premium","prentice","preserved","presidential","pressed","pressin","prestige","pretending","pretentious","prettiness","prevail","prevalent","prey","primary","prince","prior","priorities","priority","prison","prisons","privilege","probate","process","produced","productivity","profession","professionals","profile","profits","prognosis","programs","progress","promethazine","promising","promote","promotion","prone","pronounced","propaganda","propel","proper","prophesize","prophesizing","proposition","prosecute","prostitute","protecting","protective","protest","prouder","proudly","proven","proves","provoke","prowl","prynce","psanytime","psychologist","psychopath","psychotic","pucks","pudding","puffs","pullin","pullover","pumpin","pumps","punches","punching","punctuation","punt","pupil","purchase","purest","purge","purity","purse","pursue","pursuing","pursuit","pusha","pushed","puto","putting","puzzle","puzzlin","pyramids","quavo","questioning","questions","quid","quiet","quietly","quik","rabbit","races","racial","racing","rack","radar","radars","raekwon","raggedy","rags","raided","railroads","rained","rake","ramen","rand","rank","ransom","rape","raphael","rapists","rapsody","rapture","rari","rasputia","ratchet","ratchets","rated","rattles","raymond","reached","reacts","reading","reads","realities","reap","reaping","rear","rebellious","rebuttal","recall","recap","recent","recession","recipient","reckless","recognition","recollect","recommend","recommended","recorded","recorder","records","recovered","redirected","redundant","reefer","reeking","reference","reffus","reflect","reflectin","reflections","regal","register","registered","regretting","rehearsing","rehtaf","reimbursed","reindeer","reinforcing","relapse","relating","relaxing","release","relieve","relieved","relieves","religionous","religious","relocate","relocating","remain","remainder","remained","remains","reminded","reminder","remindin","reminding","remorseful","remy","repass","repetitive","reply","report","reppar","representer","represents","republican","request","require","required","resale","research","resentful","resides","residuals","residue","resistance","resolution","resolutions","resolved","resonate","respected","response","responsible","responsive","restaurant","result","results","resurface","resurfaced","resuscitation","retail","retal","retaliate","retirin","retraced","retrauq","retrospect","returning","revelation","revenue","reveoh","reverend","reverends","reverting","revery","revive","revolution","revolutionary","revolver","rewarded","rhyming","rhythms","ribbon","ricardo","rice","richer","rick","ridaz","riddling","riders","rieht","rifles","rigor","rihanna","rims","ringer","rink","riperton","risky","rival","rivals","roar","roast","robbed","robbery","robin","robo","rocket","rocky","role","roleplay","rolex","rolie","rolled","rollies","rolodex","ronnie","roof","root","rooted","rosa","rose","ross","rotate","rotten","rough","route","rovers","rthug","rubbed","rubbin","ruess","runaway","rushed","rushing","rvisions","sabotage","sack","sacred","sacredly","sacrificin","sacrilegion","saddest","saddle","salad","salmonella","salvation","sammy","samuel","sanctified","sandals","sandman","sandra","sandwiches","sane","sanity","sardines","satellite","satisfaction","saturday","sauna","savage","saved","scandalous","scapegoat","scarier","scary","scene","scenery","scenic","scent","schema","scheme","schemin","schizophrenia","sciatica","science","scott","scramblin","scrapin","scratching","screamed","screams","screechin","screeching","screens","screw","screwed","scribblin","scripts","scrotum","scrutinize","sean","search","season","seasonal","seasons","sebi","seciohc","secretary","seduce","segal","segundo","seize","seizin","seldom","selfishness","semi","semis","senses","sentenced","sentences","sentiments","separated","sequel","serena","serenade","sermon","session","sessions","settlers","settling","sevens","sevil","seville","sexually","sexy","sexyy","shackled","shade","shady","shakur","shaky","shamer","shando","shaq","sharpenin","shed","sheds","sheep","sheesh","shelltoes","shenanigans","shhh","shifts","shifty","shimmy","ships","shiver","shop","shopped","shortcut","shortly","shorts","shotty","shoulder","shoulders","shout","shouts","shrooms","shufflin","shun","shuns","sidewalk","sights","sightseer","signal","signals","signature","signatures","signing","silent","silver","similar","similes","simmer","simple","sincere","sincerely","sinful","singer","singin","singing","singled","sinners","sinnin","sinning","sirens","sisters","situa","situate","situation","sixth","skate","skeleton","skeletons","skeptical","skill","skinhead","skip","skirt","skirtin","skirts","skrrt","slack","slammed","slanderin","slangin","slaughter","sleepwalkin","sleepwalking","slept","slick","slideshow","slidin","sliding","slight","slightly","slim","slime","slimmer","slingin","slipped","slitherman","slowed","slower","slowing","smiled","smiles","smiling","smoker","smooth","snap","snappin","snapping","snaps","snatch","snatchin","sneakers","snedrub","sniffling","snipe","snipers","snitchin","soak","sobbin","sobriety","socially","sock","socked","socks","sodomy","sofa","soft","soiduts","solar","solicitin","solidarity","solo","solution","someday","songwriter","sons","sophisticated","soprano","souls","sounwave","source","sources","southside","spalding","spam","spared","sparked","speaker","speaking","specially","species","speech","speechless","speedin","spendin","spilled","spilling","spiral","spiralin","spirits","spirituality","spiteful","splits","sponsored","sponsors","sponsorship","spoon","sport","spread","sprinting","squab","squabble","squabbling","square","squares","squeezed","sraey","sregnarts","stadium","stagnant","stair","stakes","stalkin","stamina","stan","standby","stands","stardom","starstruck","starving","stashed","statistics","staying","steer","steerin","steering","stereo","stevens","stevie","stewardess","stickin","sticks","stifeneb","stimulate","stnemaciderp","stocks","stolen","stomp","stomped","stones","stoop","stopping","storm","stove","straighten","strapped","streamlinin","stressed","stressful","stretcher","stretchin","stricken","strictly","strike","strippers","stroke","strugglin","struggling","strung","studios","stumble","stunna","styrofoams","submitted","subpoena","subservient","subtle","suckers","suddenly","suffered","suffocate","sugar","suited","sunseeker","super","supernatural","superpowers","superstar","superstars","superstition","surface","surgeon","surrounded","survivors","suspicions","sutra","swag","swagged","swallowing","sway","sweats","sweeter","swerving","swimmed","swings","swisher","switchin","swizz","swole","swords","sworn","symbol","sympathetic","sympathize","sympathy","symphony","synchronization","synchronized","synonym","taaka","tabernacle","tables","tabloids","taboo","tactic","tactics","tags","taht","talented","talents","tales","tallest","tammy","tangible","tapeworm","tarnished","tarot","tash","task","tasteless","tastes","tats","tattoo","tech","technology","teef","teem","teenage","teeth","teez","teezo","telegram","telescope","televised","temper","tempting","tenant","tenfold","tense","tension","tentative","terence","term","terminate","terminator","terrace","terrence","terrible","terrier","terrified","terror","terrorist","terrorists","testament","tetris","texas","texts","thanksgivin","thanksgiving","therapist","therapy","thgifnug","thguoht","thicke","thickens","thieves","thin","thornton","thou","thoughtfulness","threatened","threw","thrills","throne","throttle","throwaway","throwin","throwing","thugs","thumb","thumbs","thump","thundercat","thunderdome","ticket","tickets","tides","tied","till","timelines","tinklin","tint","tinted","tippy","tips","tires","titanic","titanium","tithed","titled","tnedicni","toasted","toeing","toes","tolerate","tommy","tomorrows","tongues","tony","tooken","toolie","tools","toosie","toothpaste","toppin","torch","torso","torture","toss","tossin","toters","touched","touching","tougher","touring","townfolk","toyota","tpecnoc","tracks","trade","traded","trades","traeh","tragic","trainin","trance","transform","transformed","transient","translate","trap","trappin","trapping","trashy","trats","traumatic","travelin","travels","travi","trayvon","treason","treating","treaty","trial","trials","tribal","tribulation","tribulations","trick","trickle","trickled","trife","trifecta","triflin","trigger","trinkets","triple","tripled","trolley","trollin","troops","troubles","troublesome","truce","truck","trump","trumps","truths","tryone","tsefinam","tsetaerg","tsunamis","tube","tuck","tucking","tuesday","tumblin","tumbling","tune","tuohtiw","tupac","turks","turnaround","turner","turnin","tutu","tweakin","twenties","twilight","twin","twista","twitter","tylenol","tyler","typical","tyson","ultimatum","unbearable","uncover","underarms","undercovers","underground","underline","undermine","underpaid","undisputed","undone","uneasy","uneducated","unemployed","unfair","unfamiliar","unforgiven","ungrateful","unhappiness","unhealthy","unidentified","unique","unison","unite","unity","universally","universes","unknown","unmatched","unravel","unruly","unsanitary","unstable","untitled","unveiled","upped","upsets","urban","urgent","useless","usher","usual","usuals","vacation","vacational","vaccine","vagina","vaginal","vague","valedictorian","validation","valued","vandalize","vandalized","vandalizin","vanish","variables","vegas","vehicle","vein","veins","venom","vents","venus","verb","verbatim","verbs","version","versus","vest","vibes","vibrations","vicious","vicodin","vicodins","victors","videos","vigilante","villa","village","villains","vindictive","vinyl","violated","violets","viral","virgin","visiting","visits","vladimir","vocal","vocals","vodka","voids","voorhees","vouch","vumile","wage","wagon","waist","waived","wakin","waking","walks","wallets","wantin","warden","warnin","warriors","wash","washed","washing","wasted","wastin","watches","watchutola","watered","watermelon","weather","weddin","wedgie","weekdays","weeknd","weight","weights","weirdos","werg","wesley","westchester","westside","whammy","wheels","whip","whipping","whips","whiskey","whisper","whispered","whit","whities","whoa","whoop","whoopin","whorehouse","wickedness","wifey","wifi","wifin","wilderness","wildin","williams","windows","wine","winfrey","winner","winter","wipe","wipin","wiping","wire","wired","wise","wiser","witcha","withdraw","withdrawals","wittiness","wives","wizard","wock","woes","womanizer","wondered","wonderful","wondering","woof","woop","wordplay","workaholic","worldly","worrisome","wowed","wrap","wrappers","wrecking","wrestling","writer","written","wunna","wuwwy","xannies","xanny","xhosa","yachts","yachty","yams","yearn","yelawolf","yell","yellow","yeshua","yessir","ykcu","ynohtn","yoga","yopper","york","younging","yrev","yrrac","ytlayo","ytlayor","ytnew","zack","zara","zeroes","zion","zodiac"],"freq":[64,56,52,43,42,40,39,39,38,37,37,37,36,35,35,34,32,32,30,28,28,27,27,26,26,26,26,25,25,25,24,24,24,24,24,24,23,23,23,23,23,23,23,23,23,23,23,22,22,22,22,22,22,22,21,21,21,21,21,21,20,20,20,20,20,20,20,20,20,19,18,18,18,18,18,18,17,17,17,17,17,17,17,16,16,16,16,16,16,16,16,16,16,16,15,15,15,15,15,15,15,15,15,15,15,15,15,15,14,14,14,14,14,14,14,14,14,14,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-light","minSize":0,"weightFactor":4.21875,"backgroundColor":"black","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
