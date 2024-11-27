@@ -47,5 +47,180 @@
     "title": "Rania Abdul Hafiz",
     "section": "",
     "text": "Hi there! My name is Rania Abdul Hafiz. I am a student at St. Olaf College majoring in Kinesiology and Statistics and Data Science concentration. I work as a Sports Medicine Assistant and I like to use my data science skills to explore various trends in the health field and specifically sports injuries. Poke around my website to learn more!"
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html",
+    "href": "mini_project4/mini_project4.html",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "",
+    "text": "This mini project focuses on exploring the lyrics of Kendrick Lamar’s songs through various text analysis methods, including sentiment analysis, term frequency-inverse document frequency (TF-IDF), and word clouds."
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#next-word-prediction-model",
+    "href": "mini_project4/mini_project4.html#next-word-prediction-model",
+    "title": "mini_project4",
+    "section": "",
+    "text": "–&gt; Predict the next most likely word that will come after a sequence of words in a sentence or a text. –&gt; Do the rpediction for eminem, to all of his songs –&gt; predict the next song based on his previous songs –&gt; Predict the most used words in each song and the words that hes most likely going to use in his next song."
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#steps",
+    "href": "mini_project4/mini_project4.html#steps",
+    "title": "mini_project4",
+    "section": "Steps:",
+    "text": "Steps:\n\nStart by collecting a substantial amount of text data\nClean and preprocess the data by removing punctuation, special characters, and irrelevant information\nCreate a vocabulary that includes all unique words present in the dataset\nChoose and Train a Deep Neural Network to predict the next word in a sequence\nTest the model by predicting the next words in a sequence\n\nhttps://rpubs.com/jackiejovanovic/881381 https://rpubs.com/Nush12/textmining"
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#loading-all-packages-needed",
+    "href": "mini_project4/mini_project4.html#loading-all-packages-needed",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "Loading all packages needed",
+    "text": "Loading all packages needed\n\nlibrary(billboard)\nlibrary(tidyverse)\nlibrary(tidytext)\nlibrary(dplyr)\nlibrary(ggplot2)\nlibrary(wordcloud)\nlibrary(wordcloud2)\nlibrary(knitr)\nlibrary(sentimentr)\nlibrary(ggraph)\nlibrary(igraph)\nlibrary(RColorBrewer)"
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#loading-data",
+    "href": "mini_project4/mini_project4.html#loading-data",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "Loading data",
+    "text": "Loading data\n\nkendrick_data &lt;- read_csv(\"~/raniaabdulhafiz.github.io/mini_project4/kendrick_data.csv\")\ncurse_words &lt;- read_csv(\"~/raniaabdulhafiz.github.io/mini_project4/curse_words.csv\")"
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#using-str_functions-and-regular-expressions",
+    "href": "mini_project4/mini_project4.html#using-str_functions-and-regular-expressions",
+    "title": "mini_project4",
+    "section": "Using str_functions and regular expressions",
+    "text": "Using str_functions and regular expressions\n\ntidy_lyrics &lt;- kendrick_data %&gt;%\n  unnest_tokens(word, lyrics) %&gt;%  \n  filter(!word %in% stop_words$word) %&gt;% \n  group_by(word) %&gt;% \n  mutate(n = n()) %&gt;% \n  distinct()\ntidy_lyrics\n\n# A tibble: 16,246 × 10\n# Groups:   word [6,298]\n   track_name album release_date duration_ms popularity speechiness danceability\n   &lt;chr&gt;      &lt;chr&gt; &lt;date&gt;             &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;\n 1 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 2 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 3 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 4 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 5 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 6 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 7 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 8 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 9 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n10 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n# ℹ 16,236 more rows\n# ℹ 3 more variables: tempo &lt;dbl&gt;, word &lt;chr&gt;, n &lt;int&gt;\n\ncurse_words &lt;- c(\"bitches\", \"niggas\", \"fuck\", \"fucker\", \"nigga\", \"bitch\", \"titties\", \"titty\", \"fucking\", \"shit\", \"dick\", \"pussy\", \"pussies\", \"bullshit\", \"bullshitting\", \"shittin\", \"bullshittin\", \"fucked\", \"motherfucker\", \"motherfuckers\", \"mothafucker\", \"fuckin\", \"motherfuckin\", \"mothafuckin\", \"fucks\", \"fucked\", \"mothafucka\", \"mammyfucker\", \"motherfucking\", \"bitchin\", \"bitching\", \"faggot\")\n\ntidy_lyrics &lt;- tidy_lyrics %&gt;% \n  filter(!word %in% curse_words,\n         !str_detect(word, \"\\\\d\"),\n         !str_detect(word, \"[^a-zA-Z0-9 ]\"),\n         str_length(word) &gt; 3)\n  \ntidy_lyrics\n\n# A tibble: 13,887 × 10\n# Groups:   word [5,649]\n   track_name album release_date duration_ms popularity speechiness danceability\n   &lt;chr&gt;      &lt;chr&gt; &lt;date&gt;             &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;\n 1 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 2 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 3 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 4 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 5 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 6 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 7 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 8 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 9 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n10 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n# ℹ 13,877 more rows\n# ℹ 3 more variables: tempo &lt;dbl&gt;, word &lt;chr&gt;, n &lt;int&gt;"
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#sentiment-analysis---bing-sentiment",
+    "href": "mini_project4/mini_project4.html#sentiment-analysis---bing-sentiment",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "Sentiment analysis - bing sentiment",
+    "text": "Sentiment analysis - bing sentiment\nBy performing sentiment analysis using the bing lexicon, the bar plot showing the net sentiment of each album gives a glimpse of the emotional tone of Kendrick’s music. I measured the positive and negative sentiments, and calculated the net sentiment by subtracting the number of negative words from the positive ones. We can see a pattern in the emotional tone of Kendrick’s albums over time, which indicating shifts in mood, themes, or messages from one album to the next. Rappers tend to release something new each time that reflects their personal experiences, but we tend to see a domination of positive tone and use of words in most of his albums.\n\nbing_sentiment &lt;- tidy_lyrics %&gt;%\n  inner_join(get_sentiments(\"bing\"), by = \"word\") %&gt;%\n  count(album, sentiment) %&gt;%\n  pivot_wider(names_from = sentiment, values_from = n, values_fill = 0) %&gt;%\n  mutate(net_sentiment = positive - negative)\n\n\nggplot(bing_sentiment, aes(x = album, \n                           y = net_sentiment, \n                           fill = album)) +\n  geom_bar(stat = \"identity\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +\n  labs(title = \"Net Sentiment of Kendrick Lamar Albums\", \n       x = \"Album\", \n       y = \"Net Sentiment\")"
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#tf_idf",
+    "href": "mini_project4/mini_project4.html#tf_idf",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "tf_idf",
+    "text": "tf_idf\nThe TF-IDF plot identifies the most important and distinctive words in each album. Words with high TF-IDF values are unique to specific albums, revealing central concepts to each album’s lyrics. We can see that Kendrick’s focus shifts on particular subjects, whether political, social, or personal, across different stages of his career. This gives a deeper understanding of his artistic evolution and shifting in priorities. For instance, on his Diss Tracks, we can see that the word “audience” was used a lot, while in his album Untitled Unmastered, there was a mix of emotions “crying”, “mortal”, “hooray”. There is a shift in emotions based on the type of the album and the targeted audience.\n\ntf_idf &lt;- tidy_lyrics %&gt;%\n  count(album, word, sort = TRUE) %&gt;%\n  bind_tf_idf(word, album, n) %&gt;%\n  arrange(desc(tf_idf))\n\n\ntf_idf %&gt;%\n  group_by(album) %&gt;%\n  slice_max(tf_idf, n = 10) %&gt;%\n  ungroup() %&gt;%\n  ggplot(aes(x = reorder_within(word, tf_idf, album), \n             y = tf_idf, fill = album)) +\n  geom_col(show.legend = FALSE) +\n  facet_wrap(~album, scales = \"free\") +\n  coord_flip() +\n  scale_x_reordered() +\n  theme_minimal() +\n  labs(title = \"Top Words by TF-IDF in Kendrick Lamar Albums\", \n       y = \"TF-IDF\", \n       x = \"Word\")"
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#network-graph",
+    "href": "mini_project4/mini_project4.html#network-graph",
+    "title": "mini_project4",
+    "section": "Network graph",
+    "text": "Network graph\n\ntidy_bigrams &lt;- kendrick_data %&gt;%\n  unnest_tokens(bigram, lyrics, token = \"ngrams\", n = 2) %&gt;%\n  separate(bigram, into = c(\"word1\", \"word2\"), sep = \" \") %&gt;%\n  filter(!word1 %in% stop_words$word,\n         !word2 %in% stop_words$word,\n         !word1 %in% curse_words,\n         !word2 %in% curse_words,\n         !str_detect(word1, \"\\\\d\"),\n         !str_detect(word2, \"\\\\d\")) %&gt;%\n  count(word1, word2, sort = TRUE) %&gt;%\n  filter(n &gt;= 5)\n\n\nbigram_graph &lt;- graph_from_data_frame(tidy_bigrams)\n\n\nggraph(bigram_graph, layout = \"fr\") + \n  geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_color = \"cyan4\") +\n  geom_node_point(color = \"steelblue\", size = 5) +\n  geom_node_text(aes(label = name), repel = TRUE, size = 4) +\n  theme_void() +\n  labs(title = \"Network Graph of Kendrick Lamar's Lyrics\")\n\nWarning: The `trans` argument of `continuous_scale()` is deprecated as of ggplot2 3.5.0.\nℹ Please use the `transform` argument instead."
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#wordcloud",
+    "href": "mini_project4/mini_project4.html#wordcloud",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "Wordcloud",
+    "text": "Wordcloud\nThe word cloud shows the most frequent words in Kendrick Lamar’s lyrics. Larger words appear more frequently, while smaller words are less common, the number of time a word is repeated is shown as well. This visual makes it easy to identify dominant themes in Kendrick’s lyrics. Words like “life,” “feel,” “free,” and “world” could appear large, indicating their frequent use in his lyrics, which could point to overarching themes in his music. The color and shape of the word cloud are added as a way of visually engaging the viewer.\n\ntidy_lyrics %&gt;%\n  count(word, sort = TRUE) %&gt;%\n  wordcloud2(size = 1.5, color = \"random-light\", backgroundColor = \"black\")"
+  },
+  {
+    "objectID": "esquisse_presentation.html",
+    "href": "esquisse_presentation.html",
+    "title": "Exploring the esquisse Package",
+    "section": "",
+    "text": "The esquisse package helps in creating ggplot2 plots using a user-friendly interface.\nIt creates data visualizations that are quick and easy for anyone seeking a quick interactive analysis whether they are:\n\nnew to R or\nprefer a more visual approach to creating plots."
+  },
+  {
+    "objectID": "esquisse_presentation.html#introduction-to-esquisse",
+    "href": "esquisse_presentation.html#introduction-to-esquisse",
+    "title": "Exploring the esquisse Package",
+    "section": "",
+    "text": "The esquisse package helps in creating ggplot2 plots using a user-friendly interface.\nIt creates data visualizations that are quick and easy for anyone seeking a quick interactive analysis whether they are:\n\nnew to R or\nprefer a more visual approach to creating plots."
+  },
+  {
+    "objectID": "esquisse_presentation.html#example-fruit-dataset",
+    "href": "esquisse_presentation.html#example-fruit-dataset",
+    "title": "Exploring the esquisse Package",
+    "section": "Example: Fruit Dataset",
+    "text": "Example: Fruit Dataset\n\n# Create a simple data frame for fruits\nfruit_data &lt;- data.frame(\n  fruit = c(\"apple\", \"banana\", \"strawberry\", \"mango\", \"avocado\"),\n  price = c(1.2, 0.5, 2.5, 3.0, 1.5),  # Price per pound in USD\n  quantity = c(50, 100, 40, 20, 30),   # Quantity available\n  calories = c(52, 89, 50, 277, 73),   # Calories per 100g\n  vitamin_c = c(4.6, 8.7, 7.0, 0.0, 36.0)    # Vitamin C content in mg per 100g\n)\n\nfruit_data\n\n       fruit price quantity calories vitamin_c\n1      apple   1.2       50       52       4.6\n2     banana   0.5      100       89       8.7\n3 strawberry   2.5       40       50       7.0\n4      mango   3.0       20      277       0.0\n5    avocado   1.5       30       73      36.0"
+  },
+  {
+    "objectID": "esquisse_presentation.html#example-1-bar-chart-of-fruit-prices",
+    "href": "esquisse_presentation.html#example-1-bar-chart-of-fruit-prices",
+    "title": "Exploring the esquisse Package",
+    "section": "Example 1: Bar Chart of Fruit Prices",
+    "text": "Example 1: Bar Chart of Fruit Prices"
+  },
+  {
+    "objectID": "esquisse_presentation.html#visualizing-the-fruit-data-set",
+    "href": "esquisse_presentation.html#visualizing-the-fruit-data-set",
+    "title": "Exploring the esquisse Package",
+    "section": "Visualizing the Fruit Data set",
+    "text": "Visualizing the Fruit Data set\nUsing esquisse, we can create a bar chart to compare the prices of different fruits.\n\nlibrary(esquisse)\nesquisser(data = fruit_data)"
+  },
+  {
+    "objectID": "esquisse_presentation.html#code-given",
+    "href": "esquisse_presentation.html#code-given",
+    "title": "Exploring the esquisse Package",
+    "section": "Code given:",
+    "text": "Code given:\n\nlibrary(ggplot2)\n\nggplot(fruit_data) +\n aes(x = fruit, y = price) +\n geom_col(fill = \"#112446\") +\n theme_minimal()"
+  },
+  {
+    "objectID": "esquisse_presentation.html#features-of-esquisse",
+    "href": "esquisse_presentation.html#features-of-esquisse",
+    "title": "Exploring the esquisse Package",
+    "section": "Features of esquisse",
+    "text": "Features of esquisse\n\nDrag and drop interface.\nCreate plots by dragging variables onto axes."
+  },
+  {
+    "objectID": "esquisse_presentation.html#customization",
+    "href": "esquisse_presentation.html#customization",
+    "title": "Exploring the esquisse Package",
+    "section": "Customization",
+    "text": "Customization\n\nEasily customize colors, themes, and titles without writing a code.\nFilter data variables\nCreate different ggplot2 charts.\nExport graphs as PNG or PowerPoint file.\nExport the code to create the same graph"
+  },
+  {
+    "objectID": "esquisse_presentation.html#we-can-play-with-the-colors-and-add-legend",
+    "href": "esquisse_presentation.html#we-can-play-with-the-colors-and-add-legend",
+    "title": "Exploring the esquisse Package",
+    "section": "We can play with the colors and add legend:",
+    "text": "We can play with the colors and add legend:"
+  },
+  {
+    "objectID": "esquisse_presentation.html#code-given-1",
+    "href": "esquisse_presentation.html#code-given-1",
+    "title": "Exploring the esquisse Package",
+    "section": "Code given:",
+    "text": "Code given:\n\nggplot(fruit_data) +\n aes(x = fruit, y = price, fill = price) +\n geom_col() +\n scale_fill_gradient(low = \"#35011B\", \n high = \"#EF7373\") +\n labs(x = \"Fruit\", y = \"Price\", title = \"Fruit vs Price\", fill = \"Price\") +\n theme_linedraw()"
+  },
+  {
+    "objectID": "esquisse_presentation.html#example-2-scatter-plot-of-price-vs.-calories",
+    "href": "esquisse_presentation.html#example-2-scatter-plot-of-price-vs.-calories",
+    "title": "Exploring the esquisse Package",
+    "section": "Example 2: Scatter Plot of Price vs. Calories",
+    "text": "Example 2: Scatter Plot of Price vs. Calories\nWe can create a scatter plot to examine the relationship between price and calories."
+  },
+  {
+    "objectID": "esquisse_presentation.html#code-given-2",
+    "href": "esquisse_presentation.html#code-given-2",
+    "title": "Exploring the esquisse Package",
+    "section": "Code given:",
+    "text": "Code given:\n\nlibrary(ggplot2)\n\nggplot(fruit_data) +\n aes(x = price, y = calories, fill = fruit) +\n geom_point(size = 2.15, colour = \"#112446\") +\n scale_fill_hue(direction = 1) +\n labs(x = \"Price\", y = \"Calories\", title = \"Price vs Calories\", fill = \"Fruit\") +\n theme_gray() +\n theme(legend.text = element_text(size = 15L), legend.title = element_text(size = 15L))"
+  },
+  {
+    "objectID": "esquisse_presentation.html#conclusion",
+    "href": "esquisse_presentation.html#conclusion",
+    "title": "Exploring the esquisse Package",
+    "section": "Conclusion",
+    "text": "Conclusion\n\nesquisse simplifies the process of creating complex visualizations.\nIdeal for users who may not be familiar with coding but want to leverage the power of ggplot2."
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#overview",
+    "href": "mini_project4/mini_project4.html#overview",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "",
+    "text": "This mini project focuses on exploring the lyrics of Kendrick Lamar’s songs through various text analysis methods, including sentiment analysis, term frequency-inverse document frequency (TF-IDF), and word clouds."
+  },
+  {
+    "objectID": "mini_project4/mini_project4.html#using-str_functions-and-regular-expressions-tidy-the-data",
+    "href": "mini_project4/mini_project4.html#using-str_functions-and-regular-expressions-tidy-the-data",
+    "title": "Mini Project 4: Text Analysis",
+    "section": "Using str_functions and regular expressions, tidy the data",
+    "text": "Using str_functions and regular expressions, tidy the data\n\ntidy_lyrics &lt;- kendrick_data %&gt;%\n  unnest_tokens(word, lyrics) %&gt;% #separate lyrics by word\n  anti_join(curse_words) %&gt;% \n  filter(!word %in% stop_words$word) %&gt;% #filter out stop words and create n \n  group_by(word) %&gt;% \n  mutate(n = n()) %&gt;% \n  distinct()\n\ntidy_lyrics\n\n# A tibble: 15,805 × 10\n# Groups:   word [6,268]\n   track_name album release_date duration_ms popularity speechiness danceability\n   &lt;chr&gt;      &lt;chr&gt; &lt;date&gt;             &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;\n 1 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 2 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 3 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 4 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 5 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 6 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 7 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 8 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n 9 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n10 Growing A… Over… 2010-09-14        220995         52       0.366        0.586\n# ℹ 15,795 more rows\n# ℹ 3 more variables: tempo &lt;dbl&gt;, word &lt;chr&gt;, n &lt;int&gt;\n\n\n\ntidy_lyrics &lt;- tidy_lyrics %&gt;% \n  mutate(across(everything(), ~ str_to_lower(.))) %&gt;% #change all to lower case\n  filter(!str_detect(word, \"\\\\d\"), #remove all words that contain numbers\n         !str_detect(word, \"[^a-zA-Z0-9 ]\"), #remove all words that contain anything not a letter or number\n         str_length(word) &gt; 3) #keep words longer than 3 letters \n  \ntidy_lyrics\n\n# A tibble: 13,887 × 10\n# Groups:   word [5,649]\n   track_name album release_date duration_ms popularity speechiness danceability\n   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;       \n 1 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 2 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 3 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 4 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 5 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 6 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 7 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 8 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n 9 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n10 growing a… over… 2010-09-14   220995      52         0.366       0.586       \n# ℹ 13,877 more rows\n# ℹ 3 more variables: tempo &lt;chr&gt;, word &lt;chr&gt;, n &lt;chr&gt;"
   }
 ]
